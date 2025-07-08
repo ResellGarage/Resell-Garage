@@ -1,57 +1,75 @@
 const products = [
-    {
-        name: "Sp5der Hoodie",
-        profit: "$40",
-        saturation: "Medium",
-        vendorLink: "https://your-gumroad-link.com/sp5der"
-    },
-    {
-        name: "1:1 AirPods Pro",
-        profit: "$60",
-        saturation: "High",
-        vendorLink: "https://your-gumroad-link.com/airpods"
-    },
-    {
-        name: "Chrome Hearts Hat",
-        profit: "$25",
-        saturation: "Low",
-        vendorLink: "https://your-gumroad-link.com/chromehearts"
-    }
+  {
+    name: "Sp5der Hoodie",
+    profit: 40,
+    saturation: "Medium",
+    tag: "🔥 High Profit",
+    vendorLink: "https://your-gumroad-link.com/sp5der"
+  },
+  {
+    name: "1:1 AirPods Pro",
+    profit: 60,
+    saturation: "High",
+    tag: "🔥 High Profit",
+    vendorLink: "https://your-gumroad-link.com/airpods"
+  },
+  {
+    name: "Chrome Hearts Hat",
+    profit: 25,
+    saturation: "Low",
+    tag: "🧊 Low Saturation",
+    vendorLink: "https://your-gumroad-link.com/chromehearts"
+  }
 ];
 
-const resultsContainer = document.getElementById("results");
+let currentFilter = "";
+
+const results = document.getElementById("results");
 const searchInput = document.getElementById("searchInput");
 
 searchInput.addEventListener("input", () => {
-    const query = searchInput.value.toLowerCase();
-    displayResults(query);
+  displayResults(searchInput.value.toLowerCase());
 });
 
+function filterBy(type) {
+  currentFilter = type;
+  displayResults(searchInput.value.toLowerCase());
+}
+
+function resetFilter() {
+  currentFilter = "";
+  displayResults(searchInput.value.toLowerCase());
+}
+
 function displayResults(query) {
-    resultsContainer.innerHTML = "";
+  results.innerHTML = "";
 
-    const filtered = products.filter(product =>
-        product.name.toLowerCase().includes(query)
-    );
+  let filtered = products.filter(p => p.name.toLowerCase().includes(query));
 
-    if (filtered.length === 0 && query) {
-        resultsContainer.innerHTML = "<p>No products found.</p>";
-        return;
-    }
+  if (currentFilter === "profit") {
+    filtered = filtered.filter(p => p.profit >= 40);
+  } else if (currentFilter === "low") {
+    filtered = filtered.filter(p => p.saturation.toLowerCase() === "low");
+  }
 
-    filtered.forEach(product => {
-        const card = document.createElement("div");
-        card.className = "product-card";
+  if (filtered.length === 0) {
+    results.innerHTML = "<p>No products found.</p>";
+    return;
+  }
 
-        card.innerHTML = `
-            <h3>${product.name}</h3>
-            <p><strong>Profit:</strong> ${product.profit}</p>
-            <p><strong>Saturation:</strong> ${product.saturation}</p>
-            <button onclick="window.open('${product.vendorLink}', '_blank')">Get this Vendor</button>
-        `;
+  filtered.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
 
-        resultsContainer.appendChild(card);
-    });
+    card.innerHTML = `
+      <h3>${p.name}</h3>
+      <p><strong>Profit:</strong> $${p.profit}</p>
+      <p><strong>Saturation:</strong> ${p.saturation}</p>
+      <span class="tag">${p.tag}</span>
+      <button class="vendor-btn" onclick="window.open('${p.vendorLink}', '_blank')">Get This Vendor</button>
+    `;
+    results.appendChild(card);
+  });
 }
 
 displayResults("");
