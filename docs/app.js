@@ -1,53 +1,44 @@
-const products = [
-  {
-    name: "Sp5der Hoodie",
-    profit: 40,
-    saturation: "Medium",
-    tag: "🔥 High Profit",
-    vendorLink: "https://your-gumroad-link.com/sp5der"
-  },
-  {
-    name: "1:1 AirPods Pro",
-    profit: 60,
-    saturation: "High",
-    tag: "🔥 High Profit",
-    vendorLink: "https://your-gumroad-link.com/airpods"
-  },
-  {
-    name: "Chrome Hearts Hat",
-    profit: 25,
-    saturation: "Low",
-    tag: "🧊 Low Saturation",
-    vendorLink: "https://your-gumroad-link.com/chromehearts"
-  }
-];
+const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1KQcp2BuYQ1PQEeaIz0rQnEfanpEM42XPtfxE55EtetI/pubhtml';
+
+function init() {
+  Tabletop.init({
+    key: publicSpreadsheetUrl,
+    callback: showInfo,
+    simpleSheet: true
+  });
+}
+
+function showInfo(data) {
+  const results = document.getElementById("results");
+  const searchInput = document.getElementById("searchInput");
+
+  searchInput.addEventListener("input", () => {
+    displayResults(data, searchInput.value.toLowerCase());
+  });
+
+  window.filterBy = (type) => {
+    currentFilter = type;
+    displayResults(data, searchInput.value.toLowerCase());
+  };
+
+  window.resetFilter = () => {
+    currentFilter = "";
+    displayResults(data, searchInput.value.toLowerCase());
+  };
+
+  displayResults(data, "");
+}
 
 let currentFilter = "";
 
-const results = document.getElementById("results");
-const searchInput = document.getElementById("searchInput");
-
-searchInput.addEventListener("input", () => {
-  displayResults(searchInput.value.toLowerCase());
-});
-
-function filterBy(type) {
-  currentFilter = type;
-  displayResults(searchInput.value.toLowerCase());
-}
-
-function resetFilter() {
-  currentFilter = "";
-  displayResults(searchInput.value.toLowerCase());
-}
-
-function displayResults(query) {
+function displayResults(products, query) {
+  const results = document.getElementById("results");
   results.innerHTML = "";
 
   let filtered = products.filter(p => p.name.toLowerCase().includes(query));
 
   if (currentFilter === "profit") {
-    filtered = filtered.filter(p => p.profit >= 40);
+    filtered = filtered.filter(p => parseFloat(p.profit) >= 40);
   } else if (currentFilter === "low") {
     filtered = filtered.filter(p => p.saturation.toLowerCase() === "low");
   }
@@ -72,4 +63,4 @@ function displayResults(query) {
   });
 }
 
-displayResults("");
+window.addEventListener('DOMContentLoaded', init);
