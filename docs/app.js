@@ -1,15 +1,24 @@
-const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRsYk9zMtRgmgUxjZ1gu8QpM5dHgMnuR_RlIkmi3AtCKJlVOV2W4RRv68XeIt5AfCDA14gcEneh9Es/pubhtml';
+const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRsYk9zMtRgmgUxjZ1gu8QpM5dHgMnuR_RlIkmi3AtCKJlVOV2W4RRv68XeIt5AfCDA14gcEneh9Es/pub?output=csv';
+
+let currentFilter = "";
 
 function init() {
-  Tabletop.init({
-    key: publicSpreadsheetUrl,
-    callback: showInfo,
-    simpleSheet: true
-  });
+  fetch(csvUrl)
+    .then(res => res.text())
+    .then(csvText => {
+      const rows = csvText.split('\n').slice(1); // skip header
+      const products = rows.map(row => {
+        const [name, profit, saturation, tag, vendorLink] = row.split(',');
+        return { name, profit, saturation, tag, vendorLink };
+      });
+      showInfo(products);
+    })
+    .catch(err => {
+      console.error("Error loading CSV:", err);
+    });
 }
 
 function showInfo(data) {
-  const results = document.getElementById("results");
   const searchInput = document.getElementById("searchInput");
 
   searchInput.addEventListener("input", () => {
@@ -29,8 +38,6 @@ function showInfo(data) {
   displayResults(data, "");
 }
 
-let currentFilter = "";
-
 function displayResults(products, query) {
   const results = document.getElementById("results");
   results.innerHTML = "";
@@ -45,7 +52,7 @@ function displayResults(products, query) {
     filtered = filtered.filter(p => parseFloat(p.profit) >= 40);
   } else if (currentFilter === "low") {
     filtered = filtered.filter(p =>
-      p.saturation && p.saturation.toLowerCase() === "low"
+      p.saturation && p.saturation.toLowerCase().includes("low")
     );
   }
 
