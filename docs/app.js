@@ -9,7 +9,6 @@ function init() {
 }
 
 function showInfo(data) {
-  console.log("Loaded data:", data);
   const results = document.getElementById("results");
   const searchInput = document.getElementById("searchInput");
 
