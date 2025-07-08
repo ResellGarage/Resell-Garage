@@ -1,3 +1,4 @@
+// Replace this with your real Sheet ID
 const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1KQcp2BuYQ1PQEeaIz0rQnEfanpEM42XPtfxE55EtetI/pubhtml';
 
 function init() {
@@ -35,12 +36,19 @@ function displayResults(products, query) {
   const results = document.getElementById("results");
   results.innerHTML = "";
 
-  let filtered = products.filter(p => p.name.toLowerCase().includes(query));
+  // Filter products that have valid data and match the query
+  let filtered = products.filter(p =>
+    p.name &&
+    !isNaN(parseFloat(p.profit)) &&
+    p.name.toLowerCase().includes(query)
+  );
 
   if (currentFilter === "profit") {
     filtered = filtered.filter(p => parseFloat(p.profit) >= 40);
   } else if (currentFilter === "low") {
-    filtered = filtered.filter(p => p.saturation.toLowerCase() === "low");
+    filtered = filtered.filter(p =>
+      p.saturation && p.saturation.toLowerCase() === "low"
+    );
   }
 
   if (filtered.length === 0) {
@@ -63,4 +71,5 @@ function displayResults(products, query) {
   });
 }
 
+// Start everything once the page loads
 window.addEventListener('DOMContentLoaded', init);
