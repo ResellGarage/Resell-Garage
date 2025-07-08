@@ -1,4 +1,4 @@
-// ✅ This is the correct public URL format
+// ✅ Use the published version of your Google Sheet
 const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1KQcp2BuYQ1PQEeaIz0rQnEfanpEM42XPtfxE55EtetI/pubhtml';
 
 function init() {
@@ -10,6 +10,7 @@ function init() {
 }
 
 function showInfo(data) {
+  console.log("Loaded data:", data); // DEBUG LOG
   const results = document.getElementById("results");
   const searchInput = document.getElementById("searchInput");
 
@@ -36,7 +37,6 @@ function displayResults(products, query) {
   const results = document.getElementById("results");
   results.innerHTML = "";
 
-  // Filter products that have valid data and match the query
   let filtered = products.filter(p =>
     p.name &&
     !isNaN(parseFloat(p.profit)) &&
@@ -71,5 +71,4 @@ function displayResults(products, query) {
   });
 }
 
-// Start everything once the page loads
 window.addEventListener('DOMContentLoaded', init);
