@@ -1,5 +1,5 @@
 // Replace this with your real Sheet ID
-const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1KQcp2BuYQ1PQEeaIz0rQnEfanpEM42XPtfxE55EtetI/pubhtml';
+const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1KQcp2BuYQ1PQEeaIz0rQnEfanpEM42XPtfxE55EtetI/edit?gid=0#gid=0';
 
 function init() {
   Tabletop.init({
