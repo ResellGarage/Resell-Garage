@@ -1,5 +1,4 @@
-// ✅ Use the published version of your Google Sheet
-const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1KQcp2BuYQ1PQEeaIz0rQnEfanpEM42XPtfxE55EtetI/pubhtml';
+const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRsYk9zMtRgmgUxjZ1gu8QpM5dHgMnuR_RlIkmi3AtCKJlVOV2W4RRv68XeIt5AfCDA14gcEneh9Es/pubhtml';
 
 function init() {
   Tabletop.init({
@@ -10,7 +9,7 @@ function init() {
 }
 
 function showInfo(data) {
-  console.log("Loaded data:", data); // DEBUG LOG
+  console.log("Loaded data:", data);
   const results = document.getElementById("results");
   const searchInput = document.getElementById("searchInput");
 
