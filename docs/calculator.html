@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resell Calculator - Resell Garage</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>📊 Profit Calculator</h1>
+
+  <div class="calculator">
+    <label>Cost per Unit ($): <input type="number" id="cost" /></label>
+    <label>Shipping Cost ($): <input type="number" id="shipping" /></label>
+    <label>Vendor Fee ($): <input type="number" id="fee" /></label>
+    <label>Resell Price ($): <input type="number" id="resellPrice" /></label>
+    
+    <button onclick="calculate()">Calculate Profit</button>
+
+    <div id="result" class="result-box"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const cost = parseFloat(document.getElementById('cost').value) || 0;
+      const shipping = parseFloat(document.getElementById('shipping').value) || 0;
+      const fee = parseFloat(document.getElementById('fee').value) || 0;
+      const resell = parseFloat(document.getElementById('resellPrice').value) || 0;
+
+      const totalCost = cost + shipping + fee;
+      const profit = resell - totalCost;
+      const margin = resell ? ((profit / resell) * 100).toFixed(1) : 0;
+
+      const worthIt = profit >= 30 ? "✅ Worth Reselling!" : "❌ Not Enough Profit";
+
+      document.getElementById('result').innerHTML = `
+        <p><strong>Total Cost:</strong> $${totalCost.toFixed(2)}</p>
+        <p><strong>Net Profit:</strong> $${profit.toFixed(2)}</p>
+        <p><strong>Profit Margin:</strong> ${margin}%</p>
+        <p><strong>Verdict:</strong> ${worthIt}</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
