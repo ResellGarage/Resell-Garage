@@ -2,17 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Resell Garage</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <h1>Resell Garage Product Finder</h1>
+  <h1>🚗 Resell Garage Product Finder</h1>
 
+  <!-- Link to calculator page -->
+  <div style="margin-bottom: 1rem;">
+    <a href="calculator.html" class="vendor-btn" style="max-width: 250px; display: inline-block;">🧮 Profit Calculator</a>
+  </div>
+
+  <!-- Search + Filters -->
   <input type="text" id="searchInput" placeholder="Search products...">
 
-  <!-- Dropdown filters -->
   <div class="filter-grid">
     <label>
       Profit:
@@ -34,6 +38,7 @@
     </label>
   </div>
 
+  <!-- Results -->
   <div id="results"></div>
 
   <script src="app.js"></script>
