@@ -1,67 +1,62 @@
 const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRsYk9zMtRgmgUxjZ1gu8QpM5dHgMnuR_RlIkmi3AtCKJlVOV2W4RRv68XeIt5AfCDA14gcEneh9Es/pub?output=csv';
 
-let currentFilter = "";
+let productData = [];
 
 function init() {
   fetch(csvUrl)
     .then(res => res.text())
     .then(csvText => {
-      const rows = csvText.split('\n').slice(1); // skip header
-      const products = rows.map(row => {
+      const rows = csvText.split('\n').slice(1);
+      productData = rows.map(row => {
         const [name, profit, saturation, tag, vendorLink] = row.split(',');
-        return { name, profit, saturation, tag, vendorLink };
+        return { name, profit: parseFloat(profit), saturation, tag, vendorLink };
       });
-      showInfo(products);
-    })
-    .catch(err => {
-      console.error("Error loading CSV:", err);
+      setupFilters();
+      displayResults(productData, "");
     });
 }
 
-function showInfo(data) {
+function setupFilters() {
   const searchInput = document.getElementById("searchInput");
+  const profitFilter = document.getElementById("profitFilter");
+  const saturationFilter = document.getElementById("saturationFilter");
 
-  searchInput.addEventListener("input", () => {
-    displayResults(data, searchInput.value.toLowerCase());
-  });
-
-  window.filterBy = (type) => {
-    currentFilter = type;
-    displayResults(data, searchInput.value.toLowerCase());
-  };
-
-  window.resetFilter = () => {
-    currentFilter = "";
-    displayResults(data, searchInput.value.toLowerCase());
-  };
-
-  displayResults(data, "");
+  searchInput.addEventListener("input", () => applyFilters());
+  profitFilter.addEventListener("change", () => applyFilters());
+  saturationFilter.addEventListener("change", () => applyFilters());
 }
 
-function displayResults(products, query) {
-  const results = document.getElementById("results");
-  results.innerHTML = "";
+function applyFilters() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const profitType = document.getElementById("profitFilter").value;
+  const saturationType = document.getElementById("saturationFilter").value;
 
-  let filtered = products.filter(p =>
-    p.name &&
-    !isNaN(parseFloat(p.profit)) &&
+  let filtered = productData.filter(p =>
     p.name.toLowerCase().includes(query)
   );
 
-  if (currentFilter === "profit") {
-    filtered = filtered.filter(p => parseFloat(p.profit) >= 40);
-  } else if (currentFilter === "low") {
+  if (profitType === "high") filtered = filtered.filter(p => p.profit >= 40);
+  if (profitType === "low") filtered = filtered.filter(p => p.profit < 40);
+
+  if (saturationType) {
     filtered = filtered.filter(p =>
-      p.saturation && p.saturation.toLowerCase().includes("low")
+      p.saturation.toLowerCase() === saturationType
     );
   }
 
-  if (filtered.length === 0) {
+  displayResults(filtered);
+}
+
+function displayResults(products) {
+  const results = document.getElementById("results");
+  results.innerHTML = "";
+
+  if (products.length === 0) {
     results.innerHTML = "<p>No products found.</p>";
     return;
   }
 
-  filtered.forEach(p => {
+  products.forEach(p => {
     const card = document.createElement("div");
     card.className = "product-card";
 
