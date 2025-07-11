@@ -1,74 +1,104 @@
-const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTRsYk9zMtRgmgUxjZ1gu8QpM5dHgMnuR_RlIkmi3AtCKJlVOV2W4RRv68XeIt5AfCDA14gcEneh9Es/pub?output=csv';
-
-let productData = [];
-
-function init() {
-  fetch(csvUrl)
-    .then(res => res.text())
-    .then(csvText => {
-      const rows = csvText.split('\n').slice(1);
-      productData = rows.map(row => {
-        const [name, profit, saturation, tag, vendorLink] = row.split(',');
-        return { name, profit: parseFloat(profit), saturation, tag, vendorLink };
-      });
-      setupFilters();
-      displayResults(productData, "");
-    });
+/* Base layout */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #111;
+  color: #fff;
+  text-align: center;
+  padding: 2rem;
 }
 
-function setupFilters() {
-  const searchInput = document.getElementById("searchInput");
-  const profitFilter = document.getElementById("profitFilter");
-  const saturationFilter = document.getElementById("saturationFilter");
-
-  searchInput.addEventListener("input", () => applyFilters());
-  profitFilter.addEventListener("change", () => applyFilters());
-  saturationFilter.addEventListener("change", () => applyFilters());
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #00ff88;
 }
 
-function applyFilters() {
-  const query = document.getElementById("searchInput").value.toLowerCase();
-  const profitType = document.getElementById("profitFilter").value;
-  const saturationType = document.getElementById("saturationFilter").value;
-
-  let filtered = productData.filter(p =>
-    p.name.toLowerCase().includes(query)
-  );
-
-  if (profitType === "high") filtered = filtered.filter(p => p.profit >= 40);
-  if (profitType === "low") filtered = filtered.filter(p => p.profit < 40);
-
-  if (saturationType) {
-    filtered = filtered.filter(p =>
-      p.saturation.toLowerCase() === saturationType
-    );
-  }
-
-  displayResults(filtered);
+/* Search input */
+#searchInput {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  margin-bottom: 1rem;
+  width: 80%;
+  max-width: 300px;
 }
 
-function displayResults(products) {
-  const results = document.getElementById("results");
-  results.innerHTML = "";
-
-  if (products.length === 0) {
-    results.innerHTML = "<p>No products found.</p>";
-    return;
-  }
-
-  products.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "product-card";
-
-    card.innerHTML = `
-      <h3>${p.name}</h3>
-      <p><strong>Profit:</strong> $${p.profit}</p>
-      <p><strong>Saturation:</strong> ${p.saturation}</p>
-      <span class="tag">${p.tag}</span>
-      <button class="vendor-btn" onclick="window.open('${p.vendorLink}', '_blank')">Get This Vendor</button>
-    `;
-    results.appendChild(card);
-  });
+/* Filters */
+.filter-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
 }
 
-window.addEventListener('DOMContentLoaded', init);
+.filter-grid label {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.filter-grid select {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+  margin-left: 0.4rem;
+  border-radius: 6px;
+  border: none;
+}
+
+/* Product cards */
+#results {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.product-card {
+  background-color: #1a1a1a;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  width: 250px;
+  text-align: left;
+}
+
+.product-card h3 {
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+.product-card p {
+  margin: 0.3rem 0;
+}
+
+.tag {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: #00ff88;
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.vendor-btn {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: #00ff88;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+.vendor-btn:hover {
+  background: #00e674;
+}
