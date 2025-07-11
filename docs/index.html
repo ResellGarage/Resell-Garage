@@ -12,10 +12,26 @@
 
   <input type="text" id="searchInput" placeholder="Search products...">
 
-  <div class="filters">
-    <button onclick="filterBy('profit')">💰 High Profit</button>
-    <button onclick="filterBy('low')">🧊 Low Saturation</button>
-    <button onclick="resetFilter()">Reset</button>
+  <!-- Dropdown filters -->
+  <div class="filter-grid">
+    <label>
+      Profit:
+      <select id="profitFilter">
+        <option value="">Any</option>
+        <option value="high">High (40+)</option>
+        <option value="low">Low (&lt;40)</option>
+      </select>
+    </label>
+
+    <label>
+      Saturation:
+      <select id="saturationFilter">
+        <option value="">Any</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </label>
   </div>
 
   <div id="results"></div>
